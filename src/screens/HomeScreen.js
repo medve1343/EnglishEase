@@ -6,7 +6,7 @@ const HomeScreen = ({navigation}) => {
     <View style={styles.container}>
       
       <Image style={styles.scrabbleImage} source={require('../../assets/scrabble_home.jpg')}/>
-      <TouchableOpacity onPress={() => navigation.navigate('Single')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Hang')}>
         <Text style={styles.buttonText}>Start Single Player</Text>
       </TouchableOpacity>
       <TouchableOpacity>
