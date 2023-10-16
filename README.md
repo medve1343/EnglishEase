@@ -6,7 +6,7 @@ It is a hangman game.
 
 I am creating this app to become more familiar with creating native mobile apps.
 
-[Software Demo Video]([http://youtube.link.goes.here](https://youtu.be/zCUA8zyX-gc))
+[Software Demo Video](https://www.youtube.com/watch?v=zCUA8zyX-gc)
 
 # Development Environment
 
