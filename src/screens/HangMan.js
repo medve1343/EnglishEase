@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Text, StyleSheet, View, Image, FlatList, Touchable} from "react-native";
-import * as ScreenOrientation from "expo-screen-orientation";
+// import * as ScreenOrientation from "expo-screen-orientation";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { generate, count } from "random-words";
-// import { set } from "react-native-reanimated";
+
+//Generate new random word
 const wordToGuess = String(generate());
+//Insert the word into a list
 const list = Array.from({ length: wordToGuess.length }, () => "X");
-const heartImage = require('../../assets/heart.webp'); // Replace with your image path
+//List of all attempts and source of heart
+const heartImage = require('../../assets/heart.webp'); 
 const heartList = Array.from({ length: 8 }, () => heartImage);
+// Interactive buttons on the screen.
 const buttons = [
   { letter: 'a', pressed: false },
   { letter: 'b', pressed: false },
@@ -39,6 +43,7 @@ const buttons = [
 
 const HangMan = (props) => {
   
+  //useState functions
   const [imageList, setImageList] = useState(heartList);
 
   const [buttonStates, setButtonStates] = useState(buttons);
@@ -50,9 +55,11 @@ const HangMan = (props) => {
     const exists = wordToGuess.includes(letterToCheck);
     if (exists) {
       const newList = [...playList];
-        for (let i = 0; i < wordToGuess.length; i++) { if (wordToGuess[i] === letterToCheck) { newList[i] = letterToCheck; } }
+        for (let i = 0; i < wordToGuess.length; i++) { 
+          if (wordToGuess[i] === letterToCheck) { newList[i] = letterToCheck; } }
       updateList(newList);
     }
+    //Loose one life :(
     else { removeLastImage(); }
     return;
   }

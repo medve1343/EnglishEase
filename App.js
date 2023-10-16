@@ -8,7 +8,7 @@ const navigator = createStackNavigator(
     Hang: HangMan,
   },
   {
-    initialRouteName: 'Hang',
+    initialRouteName: 'Home',
     headerMode:"none"
   }
 );
