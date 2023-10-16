@@ -100,6 +100,7 @@ const HangMan = (props) => {
   return (
     <View>
       <View>
+        {/* Hangman Images */}
         <Image style={styles.tree} source={require('../../assets/hangmantree.webp')}/>
         { imageList.length <= 7 && (<Image style={styles.head} source={require('../../assets/head.webp')}/>)}
         { imageList.length <= 6 && (<Image style={styles.body} source={require('../../assets/body.webp')}/>)}
@@ -112,6 +113,7 @@ const HangMan = (props) => {
 
       </View>
       <View><Image style={styles.background} source={require('../../assets/sea-background.webp')}/></View>
+      {/* Heart List */}
       <View style={styles.heartImage}>{imageList.map((image, index) => (
         <Image
           key={index}
@@ -120,6 +122,7 @@ const HangMan = (props) => {
         />
       ))}</View>
      
+     {/* Word to Guess list */}
       <View style={styles.letterContainer}>
       <FlatList
         data={playList}
@@ -133,7 +136,7 @@ const HangMan = (props) => {
       />
       </View>
 
-      
+      {/* List of all buttons */}
       <FlatList
         data={buttonStates}
         renderItem={({ item, index }) => (
