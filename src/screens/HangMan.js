@@ -1,18 +1,80 @@
 import React, { useEffect, useState } from "react";
 import { Text, StyleSheet, View, Image, FlatList, Touchable} from "react-native";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { generate, count } from "random-words";
-import { set } from "react-native-reanimated";
+// import { set } from "react-native-reanimated";
+const wordToGuess = String(generate());
+const list = Array.from({ length: wordToGuess.length }, () => "X");
+const heartImage = require('../../assets/heart.webp'); // Replace with your image path
+const heartList = Array.from({ length: 8 }, () => heartImage);
+const buttons = [
+  { letter: 'a', pressed: false },
+  { letter: 'b', pressed: false },
+  { letter: 'c', pressed: false },
+  { letter: 'd', pressed: false },
+  { letter: 'e', pressed: false },
+  { letter: 'f', pressed: false },
+  { letter: 'g', pressed: false },
+  { letter: 'h', pressed: false },
+  { letter: 'i', pressed: false },
+  { letter: 'j', pressed: false },
+  { letter: 'k', pressed: false },
+  { letter: 'l', pressed: false },
+  { letter: 'm', pressed: false },
+  { letter: 'n', pressed: false },
+  { letter: 'o', pressed: false },
+  { letter: 'p', pressed: false },
+  { letter: 'q', pressed: false },
+  { letter: 'r', pressed: false },
+  { letter: 's', pressed: false },
+  { letter: 't', pressed: false },
+  { letter: 'u', pressed: false },
+  { letter: 'v', pressed: false },
+  { letter: 'w', pressed: false },
+  { letter: 'x', pressed: false },
+  { letter: 'y', pressed: false },
+  { letter: 'z', pressed: false },
+];
 
 const HangMan = (props) => {
-  const [attempt, setAttempt] = useState(8);
-  const subOne = () => {
-    setIsPressed(true);
-    setAttempt(attempt => attempt - 1);
+  
+  const [imageList, setImageList] = useState(heartList);
+
+  const [buttonStates, setButtonStates] = useState(buttons);
+
+  const [playList, updateList] = useState(list);
+
+  // Check if a letter exists in the list
+  const doesLetterExist = (letterToCheck) => {
+    const exists = wordToGuess.includes(letterToCheck);
+    if (exists) {
+      const newList = [...playList];
+        for (let i = 0; i < wordToGuess.length; i++) { if (wordToGuess[i] === letterToCheck) { newList[i] = letterToCheck; } }
+      updateList(newList);
+    }
+    else { removeLastImage(); }
+    return;
+  }
+
+  // Remove a heart after an attempt
+  const removeLastImage = () => {
+    if (imageList.length === 0) { return; } // If the list is empty, there's nothing to remove
+    const updatedList = imageList.slice(0, -1); // Create a new list without the last image
+    setImageList(updatedList);
   };
-  const wordToGuess = generate();
-  const [isPressed , setIsPressed] = useState(false);
+
+  // Handle press upong pushing
+  const handlePress = (index , letter) => {
+    if(!buttonStates[index].pressed) {
+      const updatedButtonStates = [...buttonStates];
+      updatedButtonStates[index].pressed = !buttonStates[index].pressed;
+      setButtonStates(updatedButtonStates);
+    }
+    doesLetterExist(letter);
+
+  };
+
   /*
     Lock Screeen Feature
     TO DO: MOVE IT UNDER HOOKS WHEN YOU CAN!!!
@@ -32,46 +94,55 @@ const HangMan = (props) => {
     <View>
       <View>
         <Image style={styles.tree} source={require('../../assets/hangmantree.webp')}/>
-        { attempt <= 7 && (<Image style={styles.head} source={require('../../assets/head.webp')}/>)}
-        { attempt <= 6 && (<Image style={styles.body} source={require('../../assets/body.webp')}/>)}
-        { attempt <= 5 && (<Image style={styles.leftArm} source={require('../../assets/arm.webp')}/>)}
-        { attempt <= 4 && (<Image style={styles.rightArm} source={require('../../assets/arm.webp')}/>)}
-        { attempt <= 3 && (<Image style={styles.leftLeg} source={require('../../assets/leg.webp')}/>)}
-        { attempt <= 2 && (<Image style={styles.rightLeg} source={require('../../assets/leg.webp')}/>)}
-        { attempt <= 1 && (<Image style={styles.branch} source={require('../../assets/branch.webp')}/>)}
-        { attempt <= 0 && (<Image style={styles.fire} source={require('../../assets/fire.webp')}/>)}
+        { imageList.length <= 7 && (<Image style={styles.head} source={require('../../assets/head.webp')}/>)}
+        { imageList.length <= 6 && (<Image style={styles.body} source={require('../../assets/body.webp')}/>)}
+        { imageList.length <= 5 && (<Image style={styles.leftArm} source={require('../../assets/arm.webp')}/>)}
+        { imageList.length <= 4 && (<Image style={styles.rightArm} source={require('../../assets/arm.webp')}/>)}
+        { imageList.length <= 3 && (<Image style={styles.leftLeg} source={require('../../assets/leg.webp')}/>)}
+        { imageList.length <= 2 && (<Image style={styles.rightLeg} source={require('../../assets/leg.webp')}/>)}
+        { imageList.length <= 1 && (<Image style={styles.branch} source={require('../../assets/branch.webp')}/>)}
+        { imageList.length <= 0 && (<Image style={styles.fire} source={require('../../assets/fire.webp')}/>)}
 
       </View>
-      <View><Text>Current count: {attempt}</Text></View>
-      <View><Text style={styles.theWord}>{wordToGuess}</Text></View>
-      <View style={styles.listStyle}>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>A</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>B</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>C</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>D</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>E</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>F</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>G</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>H</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>I</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>J</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>K</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>L</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>M</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>N</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>O</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>P</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>Q</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>R</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>S</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>T</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>U</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>V</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>W</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>X</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>Y</Text></TouchableOpacity>
-        <TouchableOpacity onPress={subOne}><Text style={styles.textStyle}>Z</Text></TouchableOpacity>
+      <View><Image style={styles.background} source={require('../../assets/sea-background.webp')}/></View>
+      <View style={styles.heartImage}>{imageList.map((image, index) => (
+        <Image
+          key={index}
+          source={image}
+          style={styles.imageHeart}
+        />
+      ))}</View>
+     
+      <View style={styles.letterContainer}>
+      <FlatList
+        data={playList}
+        horizontal={true}
+        renderItem={({ item }) => (
+          <View>
+            <Text style={styles.item}>{item}</Text>
+          </View>
+        )}
+        scrollEnabled={false}
+      />
       </View>
+
+      
+      <FlatList
+        data={buttonStates}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            style={item.pressed ? styles.pressedButton : styles.button}
+            disabled={item.pressed}
+            onPress={() => handlePress(index, item.letter)}
+          >
+            <Text style={styles.letter}>{item.letter}</Text>
+          </TouchableOpacity>
+        )}
+        numColumns={7} // Number of columns in the grid
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.listLetters}
+      />
+    
     </View>
   );
 };
@@ -124,17 +195,11 @@ const styles = StyleSheet.create({
     left: 150,
   },
   
-  textStyle: {
-    fontSize:30,
-    margin: 10,
-    borderWidth: 2,
-    width: 50,
-    textAlign:'center',
-  },
   listStyle: {
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    top: 80,
   },
   theWord: {
     textAlign: 'center',
@@ -154,8 +219,64 @@ const styles = StyleSheet.create({
     height:60,
     width: 70,
     top:310,
-    left: 107,
-  }
+    left: 105,
+  },
+  letterContainer: {
+    position: 'absolute',
+    top: 435,
+    alignSelf: 'center',
+  },
+  item: {
+    fontSize: 50,
+    margin: 5,
+    textDecorationLine: 'underline',
+    textDecorationColor: 'black',
+  },
+  imageHeart: {
+    width:25,
+    height:25,
+  },
+  heartImage: {
+    top: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  
+
+  listLetters: {
+    marginTop:70,
+    // flexDirection: 'row',
+    
+    // justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  button: {
+    borderWidth: 2,
+    alignItems: 'center',
+    width: 50,
+    height: 65,
+    padding: 10,
+    margin: 5,
+    backgroundColor: 'lightgray',
+  },
+  pressedButton: {
+    borderWidth: 2,
+    width: 50,
+    height: 65,
+    alignItems: 'center',
+    padding: 10,
+    margin: 5,
+    backgroundColor: 'red',
+  },
+  letter: {
+    fontSize: 35,
+    bottom: 2,
+  },
+  background: {
+    position:'absolute',
+    width:400,
+    height:600,
+  },
 });
 
 export default HangMan;

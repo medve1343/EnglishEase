@@ -2,14 +2,13 @@ import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import HomeScreen from "./src/screens/HomeScreen";
 import HangMan from "./src/screens/HangMan";
-
 const navigator = createStackNavigator(
   {
     Home: HomeScreen,
-    Hang: HangMan
+    Hang: HangMan,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Hang',
     headerMode:"none"
   }
 );
