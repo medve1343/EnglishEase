@@ -19,5 +19,5 @@
 # Useful Websites
 
 {Make a list of websites that you found helpful in this project}
-* [Udemy]([http://url.link.goes.here](https://www.udemy.com/))
+* [Udemy](udemy.com)
 * [Youtube](youtube.com)
