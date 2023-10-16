@@ -16,6 +16,5 @@ Javascript language
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
 * [Udemy](udemy.com)
 * [Youtube](youtube.com)
